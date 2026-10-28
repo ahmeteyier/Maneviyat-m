@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#174c3a">
+<title>Maneviyatım</title>
+<style>
+:root{--green:#174c3a;--green2:#23684e;--gold:#c9a45c;--cream:#f7f4eb;--paper:#fffdf8;--ink:#23332b;--muted:#718078;--line:#e8e4d8}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:88px}
+header{background:linear-gradient(145deg,#123c2e,#23684e);color:#fff;padding:22px 20px 25px;border-radius:0 0 26px 26px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px;letter-spacing:.2px}.moon{color:#f0d69b;font-size:25px}
+header p{margin:10px 0 0;color:#e4eee7;font-size:13px}
+main{max-width:720px;margin:0 auto;padding:16px}
+.page{display:none}.page.active{display:block}
+h2{font-size:20px;margin:8px 0 12px}.sub{font-size:13px;color:var(--muted);margin-top:-4px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 3px 12px #173f2a08}
+.eyebrow{font-size:11px;letter-spacing:1.1px;text-transform:uppercase;color:var(--green2);font-weight:800}
+.quote{font-size:20px;line-height:1.45;font-weight:650;margin:10px 0;color:var(--green)}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+button,select{font:inherit}button{border:0;border-radius:12px;padding:11px 14px;background:var(--green);color:white;font-weight:650;cursor:pointer}button.secondary{background:#e9efe9;color:var(--green)}button.ghost{background:transparent;color:var(--green);padding:8px}
+button:active{transform:scale(.98)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fffdf9;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 5px calc(8px + env(safe-area-inset-bottom));z-index:3}
+.nav button{background:transparent;color:#718078;font-size:11px;padding:8px 2px;border-radius:12px}.nav button span{display:block;font-size:20px;margin-bottom:3px}.nav button.active{background:#eaf0e9;color:var(--green)}
+.prayers{display:grid;grid-template-columns:1fr 1fr;gap:9px}.prayer{background:#f6f5ed;border-radius:13px;padding:12px}.prayer b{display:block;font-size:14px}.prayer span{font-size:18px;font-weight:750;color:var(--green);display:block;margin-top:6px}
+select{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fffdf8;color:var(--ink);max-width:100%}
+.dua-title{font-weight:750;color:var(--green);margin-bottom:8px}.arabic{font-size:22px;line-height:1.9;text-align:right;margin:10px 0}.translation{font-size:14px;line-height:1.55}.source{font-size:12px;color:var(--muted);margin-top:9px}
+.counter{text-align:center;padding:20px 0}.count{font-size:64px;font-weight:800;color:var(--green);line-height:1.1}.round{width:180px;height:180px;border-radius:100%;background:linear-gradient(145deg,#23684e,#123c2e);color:#fff;font-size:22px;box-shadow:0 9px 25px #174c3a28;border:7px solid #d8e4d8;margin:20px auto;display:flex;align-items:center;justify-content:center}
+.small{font-size:12px;color:var(--muted);line-height:1.5}.notice{background:#fff5d9;border:1px solid #f0dfac;color:#735a1d;border-radius:12px;padding:12px;font-size:12px;line-height:1.45}
+.listitem{padding:13px 0;border-bottom:1px solid var(--line);line-height:1.45}.listitem:last-child{border-bottom:0}
+input[type=text]{width:100%;border:1px solid var(--line);padding:11px;border-radius:10px;background:white}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span class="moon">☾</span> Maneviyatım</div>
+  <p>Günün huzuru, duan ve hatırlayışın.</p>
+</header>
+<main>
+<section id="home" class="page active">
+  <div class="row"><h2>Hoş geldin 🌿</h2><span id="today" class="small"></span></div>
+  <div class="card">
+    <div class="eyebrow">Günün sözü</div>
+    <div id="dailyQuote" class="quote">Kalpler, Allah'ı anmakla huzur bulur.</div>
+    <div id="quoteSource" class="small">Ra'd Suresi, 28. ayetten anlam</div>
+    <div class="actions"><button onclick="shareQuote()">↗ Paylaş</button><button class="secondary" onclick="toggleFavorite()">♡ Favorile</button><button class="ghost" onclick="nextQuote()">Sonraki ↻</button></div>
+  </div>
+  <div class="card">
+    <div class="row"><div><div class="eyebrow">Namaz vakitleri</div><h2 id="homeCity" style="margin:5px 0">Şehir seç</h2></div><button class="secondary" onclick="showPage('prayer')">Vakitlere git</button></div>
+    <div id="homePrayer" class="small">Namaz vakitlerini görmek için şehir seçip yükle.</div>
+  </div>
+  <div class="card">
+    <div class="row"><div><div class="eyebrow">Tesbih</div><div style="font-size:14px;margin-top:5px">Bugünkü sayımın</div></div><strong id="homeCount" style="font-size:28px;color:var(--green)">0</strong></div>
+    <div class="actions"><button onclick="showPage('tasbih')">Tesbihe başla</button></div>
+  </div>
+</section>
+<section id="prayer" class="page">
+  <h2>Namaz vakitleri</h2><p class="sub">Şehrini seçerek günlük vakitleri getir.</p>
+  <div class="card">
+    <label for="city"><b>Şehir</b></label>
+    <div class="row" style="margin-top:8px;flex-wrap:wrap">
+      <select id="city">
+        <option value="Bursa">Bursa</option><option value="Istanbul">İstanbul</option><option value="Ankara">Ankara</option><option value="Izmir">İzmir</option><option value="Kocaeli">Kocaeli</option><option value="Gebze">Gebze</option><option value="Konya">Konya</option><option value="Adana">Adana</option><option value="Antalya">Antalya</option><option value="Diyarbakir">Diyarbakır</option><option value="Trabzon">Trabzon</option><option value="Gaziantep">Gaziantep</option>
+      </select><button onclick="loadPrayer()">Vakitleri getir</button>
+    </div>
+    <p id="prayerStatus" class="small">Vakitler internetten yüklenir. Bağlantı gerekebilir.</p>
+    <div id="prayerGrid" class="prayers"></div>
+  </div>
+  <div class="notice">Namaz vakitleri hesaplama yöntemine göre birkaç dakika değişebilir. İbadet için yerel cami veya resmî dinî otoritenin yayımladığı vakitlerle karşılaştır.</div>
+</section>
+<section id="duas" class="page">
+  <h2>Dualar</h2><p class="sub">Günlük hayatta okuyabileceğin kısa dualar.</p>
+  <div class="card">
+    <div class="dua-title">Rabbimiz, bize iyilik ver</div>
+    <div class="arabic" lang="ar" dir="rtl">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</div>
+    <div class="translation"><b>Anlamı:</b> Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver ve bizi ateş azabından koru.</div>
+    <div class="source">Kaynak: Kur'an-ı Kerim, Bakara 2:201</div>
+    <div class="actions"><button class="secondary" onclick="shareText('Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver ve bizi ateş azabından koru. (Bakara 2:201)')">↗ Paylaş</button></div>
+  </div>
+  <div class="card">
+    <div class="dua-title">İlim duası</div>
+    <div class="arabic" lang="ar" dir="rtl">رَبِّ زِدْنِي عِلْمًا</div>
+    <div class="translation"><b>Anlamı:</b> Rabbim, ilmimi artır.</div>
+    <div class="source">Kaynak: Kur'an-ı Kerim, Tâhâ 20:114</div>
+    <div class="actions"><button class="secondary" onclick="shareText('Rabbim, ilmimi artır. (Tâhâ 20:114)')">↗ Paylaş</button></div>
+  </div>
+  <div class="card">
+    <div class="dua-title">Kolaylık duası</div>
+    <div class="arabic" lang="ar" dir="rtl">رَبِّ اشْرَحْ لِي صَدْرِي ۝ وَيَسِّرْ لِي أَمْرِي</div>
+    <div class="translation"><b>Anlamı:</b> Rabbim! Gönlüme ferahlık ver. İşimi bana kolaylaştır.</div>
+    <div class="source">Kaynak: Kur'an-ı Kerim, Tâhâ 20:25–26 (duanın bir bölümü)</div>
+    <div class="actions"><button class="secondary" onclick="shareText('Rabbim! Gönlüme ferahlık ver. İşimi bana kolaylaştır. (Tâhâ 20:25–26)')">↗ Paylaş</button></div>
+  </div>
+</section>
+<section id="tasbih" class="page">
+  <h2>Tesbih</h2><p class="sub">Zikrini kendi hızında takip et.</p>
+  <div class="card counter">
+    <div class="eyebrow">Bugünkü sayım</div>
+    <div id="count" class="count">0</div>
+    <button class="round" onclick="increment()">Zikret<br>+1</button>
+    <div class="actions" style="justify-content:center"><button class="secondary" onclick="resetCount()">Sıfırla</button><button class="ghost" onclick="setTarget()">Hedef belirle</button></div>
+    <p id="targetText" class="small">Günlük hedef: 33</p>
+  </div>
+  <div class="notice">Sayaç bu cihazın tarayıcısında saklanır. Tarayıcı verileri silinirse kayıt da silinebilir.</div>
+</section>
+<section id="favorites" class="page">
+  <h2>Favorilerim</h2><p class="sub">Kaydettiğin sözler bu cihazda tutulur.</p>
+  <div id="favoriteList" class="card">Henüz favori sözün yok.</div>
+</section>
+<footer>Maneviyatım · İlk deneme sürümü</footer>
+</main>
+<nav class="nav">
+<button class="active" data-page="home" onclick="showPage('home',this)"><span>⌂</span>Ana sayfa</button>
+<button data-page="prayer" onclick="showPage('prayer',this)"><span>◷</span>Vakitler</button>
+<button data-page="duas" onclick="showPage('duas',this)"><span>☾</span>Dualar</button>
+<button data-page="tasbih" onclick="showPage('tasbih',this)"><span>◎</span>Tesbih</button>
+</nav>
+<script>
+const quotes=[
+["Kalpler, Allah'ı anmakla huzur bulur.","Ra'd Suresi, 28. ayetten anlam"],
+["Şüphesiz güçlükle beraber bir kolaylık vardır.","İnşirah Suresi, 6. ayet"],
+["Kim Allah'a tevekkül ederse O, ona yeter.","Talâk Suresi, 3. ayetten anlam"],
+["Güzel söz sadakadır.","Hadis meali; Sahih kaynaklarda rivayet edilmiştir"],
+["Allah iyilik yapanları sever.","Bakara Suresi, 195. ayetten anlam"],
+["Rabbinin nimetini anlat.","Duhâ Suresi, 11. ayet"]
+];
+let qi=Number(localStorage.getItem("man_qi")||0),count=Number(localStorage.getItem("man_count")||0),target=Number(localStorage.getItem("man_target")||33),favorites=JSON.parse(localStorage.getItem("man_favs")||"[]");
+function showPage(id,btn){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));if(id==="favorites")renderFavs();window.scrollTo(0,0)}
+function renderQuote(){document.getElementById("dailyQuote").textContent=quotes[qi][0];document.getElementById("quoteSource").textContent=quotes[qi][1]}
+function nextQuote(){qi=(qi+1)%quotes.length;localStorage.setItem("man_qi",qi);renderQuote()}
+function toggleFavorite(){const q=quotes[qi];const key=q[0];if(favorites.some(x=>x[0]===key)){favorites=favorites.filter(x=>x[0]!==key)}else{favorites.push(q)}localStorage.setItem("man_favs",JSON.stringify(favorites));renderFavs();alert(favorites.some(x=>x[0]===key)?"Favorilere eklendi.":"Favorilerden çıkarıldı.")}
+function renderFavs(){const el=document.getElementById("favoriteList");if(!favorites.length){el.textContent="Henüz favori sözün yok.";return}el.innerHTML="";favorites.forEach((q,i)=>{const d=document.createElement("div");d.className="listitem";const t=document.createElement("b");t.textContent=q[0];const s=document.createElement("div");s.className="small";s.textContent=q[1];const b=document.createElement("button");b.className="secondary";b.style.marginTop="8px";b.textContent="Paylaş";b.onclick=()=>shareText(q[0]+" — "+q[1]);d.append(t,s,b);el.appendChild(d)})}
+function shareText(text){if(navigator.share){navigator.share({title:"Maneviyatım",text}).catch(()=>{})}else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert("Metin kopyalandı."),()=>alert(text))}else{prompt("Metni kopyala:",text)}}
+function shareQuote(){shareText(quotes[qi][0]+" — "+quotes[qi][1]+"\nManeviyatım")}
+function increment(){count++;localStorage.setItem("man_count",count);renderCount()}
+function resetCount(){if(confirm("Tesbih sayacı sıfırlansın mı?")){count=0;localStorage.setItem("man_count",count);renderCount()}}
+function setTarget(){const n=prompt("Günlük hedef kaç olsun?",String(target));if(n!==null&&Number(n)>0){target=Math.floor(Number(n));localStorage.setItem("man_target",target);renderCount()}}
+function renderCount(){document.getElementById("count").textContent=count;document.getElementById("homeCount").textContent=count;document.getElementById("targetText").textContent="Günlük hedef: "+target+" · "+Math.min(100,Math.round(count/target*100))+"%"}
+async function loadPrayer(){const city=document.getElementById("city").value;document.getElementById("prayerStatus").textContent="Vakitler yükleniyor…";document.getElementById("prayerGrid").innerHTML="";try{const d=new Date();const date=[String(d.getDate()).padStart(2,"0"),String(d.getMonth()+1).padStart(2,"0"),d.getFullYear()].join("-");const url="https://api.aladhan.com/v1/timingsByCity/"+date+"?city="+encodeURIComponent(city)+"&country=Turkey&method=13";const r=await fetch(url);if(!r.ok)throw new Error("Bağlantı hatası");const j=await r.json();if(j.code!==200)throw new Error("Vakitler alınamadı");const t=j.data.timings;const items=[["İmsak",t.Fajr],["Güneş",t.Sunrise],["Öğle",t.Dhuhr],["İkindi",t.Asr],["Akşam",t.Maghrib],["Yatsı",t.Isha]];const grid=document.getElementById("prayerGrid");items.forEach(([name,time])=>{const el=document.createElement("div");el.className="prayer";const b=document.createElement("b");b.textContent=name;const s=document.createElement("span");s.textContent=(time||"—").split(" ")[0];el.append(b,s);grid.appendChild(el)});document.getElementById("prayerStatus").textContent="Tarih: "+(j.data.date.readable||date)+" · Hesaplama: Diyanet yöntemi";document.getElementById("homeCity").textContent=city;document.getElementById("homePrayer").textContent=items.map(x=>x[0]+": "+(x[1]||"—").split(" ")[0]).join("  ·  ")}catch(e){document.getElementById("prayerStatus").textContent="Vakitler alınamadı. İnternet bağlantını kontrol et veya daha sonra tekrar dene. Bu ekran henüz resmî vakit kaynağı yerine geçmez.";}}
+const now=new Date();document.getElementById("today").textContent=now.toLocaleDateString("tr-TR",{day:"numeric",month:"short"});renderQuote();renderCount();renderFavs();
+</script>
+</body>
+</html>
